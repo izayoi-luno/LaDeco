@@ -1,0 +1,1 @@
+from .mam_configs.m2m_config import *

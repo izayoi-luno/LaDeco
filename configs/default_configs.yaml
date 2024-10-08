@@ -1,0 +1,4 @@
+predict_configs:
+  lama: "configs/lama_configs/predict/predict.yaml"
+  mam: "configs/mam_configs/MAM-ViTB-8gpu.toml"
+  

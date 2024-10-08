@@ -1,0 +1,15 @@
+# The environment
+env/
+myenv/
+
+# The pretrained checkpoints
+pretrained/
+
+# The dataset
+sam_data_partial/
+
+# Python cache
+__pycache__/  
+
+# Inference results
+results/

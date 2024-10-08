@@ -1,0 +1,13 @@
+addict
+diffusers
+gradio
+huggingface_hub
+Pillow
+requests
+setuptools
+supervision
+termcolor
+yapf
+scipy
+pycocotools
+
