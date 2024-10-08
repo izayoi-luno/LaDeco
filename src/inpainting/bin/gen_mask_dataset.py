@@ -9,6 +9,8 @@ import PIL.Image as Image
 import numpy as np
 from joblib import Parallel, delayed
 
+import sys
+sys.path.append(r'D:\\workspace\\lama')
 from saicinpainting.evaluation.masks.mask import SegmentationMask, propose_random_square_crop
 from saicinpainting.evaluation.utils import load_yaml, SmallMode
 from saicinpainting.training.data.masks import MixedMaskGenerator
@@ -56,7 +58,7 @@ def process_images(src_images, indir, outdir, config):
             else:
                 factor = config.cropping.out_min_size / min(image.size)
                 out_size = (np.array(image.size) * factor).round().astype('uint32')
-                image = image.resize(out_size, resample=Image.BICUBIC)
+                image = image.resize(tuple(out_size), resample=Image.BICUBIC)
 
             # generate and select masks
             src_masks = mask_generator.get_masks(image)

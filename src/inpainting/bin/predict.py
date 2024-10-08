@@ -10,7 +10,8 @@ import logging
 import os
 import sys
 import traceback
-
+import sys
+sys.path.append(r'D:\\workspace\\lama')
 from saicinpainting.evaluation.utils import move_to_device
 from saicinpainting.evaluation.refinement import refine_predict
 os.environ['OMP_NUM_THREADS'] = '1'
@@ -38,9 +39,10 @@ LOGGER = logging.getLogger(__name__)
 @hydra.main(config_path='../configs/prediction', config_name='default.yaml')
 def main(predict_config: OmegaConf):
     try:
-        register_debug_signal_handlers()  # kill -10 <pid> will result in traceback dumped into log
+        if sys.platform != 'win32':
+            register_debug_signal_handlers()  # kill -10 <pid> will result in traceback dumped into log
 
-        device = torch.device(predict_config.device)
+        device = torch.device("cpu")
 
         train_config_path = os.path.join(predict_config.model.path, 'config.yaml')
         with open(train_config_path, 'r') as f:
