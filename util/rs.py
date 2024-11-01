@@ -90,4 +90,23 @@ def matte2mask(alpha, thres=127):
             raise TypeError('alpha should be 2D or 3D array with 1 channel')
     else:
         raise TypeError('alpha should be numpy array')
+
+def save_foreground(img, matte, save_path):
+    if isinstance(matte, np.ndarray):
+        if len(matte.shape) == 3 and matte.shape[2] == 1:
+            alpha_matte = np.squeeze(matte)
+        else:
+            alpha_matte = matte
+        assert len(alpha_matte.shape) == 2, "matte should be grayscale"
         
+        if alpha_matte.max() > 1:
+            alpha = alpha_matte.astype(float) / 255.0
+        else:
+            alpha = alpha_matte.astype(float)
+        alpha = cv2.merge([alpha, alpha, alpha])
+        img_BGR = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+
+        foreground = img_BGR.astype(float) * alpha
+        output = np.dstack((foreground, alpha_matte))
+        output = output.astype(np.uint8)
+        cv2.imwrite(save_path, output)

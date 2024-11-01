@@ -64,10 +64,13 @@ def photo_infer(args):
     if args.input_mode == 'mouse':
         handler = manu.ImageClickHandler(args.img_path)
         handler.load_image()
-        prompt = handler.get_clicked_point()
+        got_prompt = handler.get_clicked_point()
+        prompt = [item for sublist in got_prompt for item in sublist]
+        # print(prompt)
     elif args.input_mode == 'keyboard':
         if args.prompt:
             prompt = args.prompt
+            # print(prompt)
         else:
             raise ValueError("[Error]: prompt should be provided")
     
@@ -86,7 +89,9 @@ def photo_infer(args):
         if args.prompt_mode == 'point':
             pointed_img_path = os.path.join(args.out_path, 'pointed_img.png')
         matted_img_path = os.path.join(args.out_path, 'matted_img.png')
+        foreground_path = os.path.join(args.out_path, 'foreground.png')
         rs.save_matte(matte, out_path)
+        rs.save_foreground(img, matte, foreground_path)
         
         plt.figure()
         plt.imshow(img)
