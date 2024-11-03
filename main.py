@@ -2,6 +2,7 @@ import argparse
 import torch
 import os
 import matplotlib.pyplot as plt
+import numpy as np
 
 from src.decomposer import LayerDecomposer
 from util import plotter, rs
@@ -76,8 +77,43 @@ def photo_infer(args):
     
     process_input = decomposer.prompt_preprocess(img, prompt, args.target_length)
     if args.front_side == 'segment':
-        mask = decomposer.segment(process_input['img'], process_input['prompt'])
-        mask = decomposer.inter_process(mask)
+        masks = decomposer.segment(process_input['img'], process_input['prompt'])
+        if isinstance(masks, list):
+            masked_img_path = os.path.join(args.out_path, f'masked_img.png')
+            plt.figure()
+            plt.imshow(img)
+            plt.axis('off')
+            ax = plt.gca()
+            plotter.show_seg_result(masks, ax)
+            plt.savefig(masked_img_path, bbox_inches='tight', pad_inches=0)
+            plt.close()
+
+            mask = [decomposer.inter_process(m) for m in masks]
+
+        elif isinstance(masks, np.ndarray):
+            masks = masks.astype(np.uint8) * 255
+            for i, m in enumerate(masks):
+                out_path = os.path.join(args.out_path, f'matte_result_{i}.png')
+                if args.seg_infer_type == 'manual':
+                    pointed_img_path = os.path.join(args.out_path, f'pointed_img_{i}.png')
+                masked_img_path = os.path.join(args.out_path, f'masked_img_{i}.png')
+                foreground_path = os.path.join(args.out_path, f'foreground_{i}.png')
+                rs.save_matte(m, out_path)
+                rs.save_foreground(img, m, foreground_path)
+            
+                plt.figure()
+                plt.imshow(img)
+                plt.axis('off')
+                ax = plt.gca()
+                if args.prompt_mode == 'point':
+                    plotter.draw_points(ax, process_input['prompt'][..., :2], process_input['prompt'][..., -1])
+                    plt.savefig(pointed_img_path, bbox_inches='tight', pad_inches=0)
+                plotter.draw_mask(ax, m)
+                plt.savefig(masked_img_path, bbox_inches='tight', pad_inches=0)
+                plt.close()
+
+            mask = [decomposer.inter_process(m) for m in masks]
+       
     elif args.front_side == 'matte':
         osn_width = args.osn_width
         if not len(osn_width) == 3:
@@ -109,9 +145,15 @@ def photo_infer(args):
         raise NotImplementedError("[Error]: front side not supported")
     
     if args.back_side == 'inpaint':
-        inpainted = decomposer.bg_inpaint(img, mask=mask)
-        out_path = os.path.join(args.out_path, 'inpaint_result.png')
-        rs.save_img(inpainted, out_path)
+        if isinstance(mask, list):
+            for i, m in enumerate(mask):
+                inpainted = decomposer.bg_inpaint(img, mask=m)
+                out_path = os.path.join(args.out_path, f'inpaint_result_{i}.png')
+                rs.save_img(inpainted, out_path)
+        elif isinstance(mask, np.ndarray):
+            inpainted = decomposer.bg_inpaint(img, mask=mask)
+            out_path = os.path.join(args.out_path, 'inpaint_result.png')
+            rs.save_img(inpainted, out_path)
     else:
         raise NotImplementedError("[Error]: back side not supported")
 def main():

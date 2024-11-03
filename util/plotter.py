@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import copy
 
-def show_seg_result(result):
+def show_seg_result(result, ax):
     if len(result) == 0:
         return
     sorted_result = sorted(result, key=(lambda x: x['area']), reverse=True)
-    ax = plt.gca()
+    # ax = plt.gca()
     ax.set_autoscale_on(False)
 
     img = np.ones((sorted_result[0]['segmentation'].shape[0], sorted_result[0]['segmentation'].shape[1], 4))

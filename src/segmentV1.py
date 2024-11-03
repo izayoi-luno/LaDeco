@@ -47,7 +47,7 @@ def segment(img, model, prompt=None, multimask=False):
     if isinstance(model, SamAutomaticMaskGenerator):
         return model.generate(img)
     elif isinstance(model, SamPredictor):
-        if not prompt or (isinstance(prompt, np.ndarray) and len(prompt) == 0):
+        if (prompt is None) or (isinstance(prompt, np.ndarray) and prompt.size == 0):
             print("[User Warning]: No prompt provided, using default prompt")
             h, w = img.shape[:2]
             prompt = np.array([[w // 2, h // 2, 1]])

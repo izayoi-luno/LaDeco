@@ -26,7 +26,7 @@ def matte(
     ):
     _, pred, post_mask = model.forward_inference(input)
     
-    alpha_pred_os1, alpha_pred_os4, alpha_pred_os8 = pred['alpha_os1'], pred['alpha_os4'], pred['alpha_os8']
+    alpha_pred_os1, alpha_pred_os4, alpha_pred_os8 = pred['alpha_os1'], pred['alpha_os4'], pred['alpha_os8']    
     alpha_pred_os8 = alpha_pred_os8[..., : input['pad_shape'][0], : input['pad_shape'][1]]
     alpha_pred_os4 = alpha_pred_os4[..., : input['pad_shape'][0], : input['pad_shape'][1]]
     alpha_pred_os1 = alpha_pred_os1[..., : input['pad_shape'][0], : input['pad_shape'][1]]
