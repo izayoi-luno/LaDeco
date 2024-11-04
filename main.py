@@ -93,12 +93,12 @@ def photo_infer(args):
         elif isinstance(masks, np.ndarray):
             masks = masks.astype(np.uint8) * 255
             for i, m in enumerate(masks):
-                out_path = os.path.join(args.out_path, f'matte_result_{i}.png')
+                out_path = os.path.join(args.out_path, f'mask_result_{i}.png')
                 if args.seg_infer_type == 'manual':
                     pointed_img_path = os.path.join(args.out_path, f'pointed_img_{i}.png')
                 masked_img_path = os.path.join(args.out_path, f'masked_img_{i}.png')
                 foreground_path = os.path.join(args.out_path, f'foreground_{i}.png')
-                rs.save_matte(m, out_path)
+                rs.save_mask(m, out_path)
                 rs.save_foreground(img, m, foreground_path)
             
                 plt.figure()
