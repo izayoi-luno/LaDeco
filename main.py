@@ -24,7 +24,7 @@ def args_parse():
     
     parser.add_argument('-seg_type', '--seg_type', type=str, default='vit_h', choices=['vit_h', 'vit_l', 'vit_b'], help='Segment Anything Model type')
     parser.add_argument('-seg_ckpt', '--seg_ckpt', type=str, default='./pretrained/sam_vit_h_4b8939.pth', help='SAM checkpoint')
-    parser.add_argument('-seg_infer_type', '--seg_infer_type', type=str, default='auto', choices=['auto', 'manual'], help='Segment inferencer type')   
+    parser.add_argument('-seg_infer_type', '--seg_infer_type', type=str, default='manual', choices=['auto', 'manual'], help='Segment inferencer type')   
     parser.add_argument('-multimask', '--multimask', action='store_true', default=False, help='Whether to use multimask output')
     
     parser.add_argument('-mat_config', '--mat_config', type=str, default='./configs/mam_configs/MAM-ViTB-8gpu.toml', help='matte model configurations')
