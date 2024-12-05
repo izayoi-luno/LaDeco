@@ -11,6 +11,11 @@
 ## Layer Decomposer
 This repository is to provide method and tool to decompose image layers. The tool is based on deep learning methods of Matting-Anything (MAM, for image matting), and LaMa (for image inpainting) and traditional vision methods.
 
+![cars](./assets/cars.png)
+<div align="center">
+    Top-Left: Input Image; Top-Right: Object Layer 1; Bottom-Right: Object Layer 2; Bottom-Left: Background Layer
+</div>
+
 ## Get Start
 ### download this repository
 ```bash
